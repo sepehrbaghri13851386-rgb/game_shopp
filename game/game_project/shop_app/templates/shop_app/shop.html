@@ -1,0 +1,264 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block contect %}
+  <style>
+    .main-banner {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .banner-bg {
+      position: absolute;
+      top: -5%;
+      left: -5%;
+      right: -5%;
+      bottom: -5%;
+      background-image: url("{% static 'assets/images/3407272.png' %}");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      animation: subtleZoom 8s ease-out forwards;
+      z-index: 0;
+    }
+
+    @keyframes subtleZoom {
+      from { transform: scale(1.08); }
+      to   { transform: scale(1.0); }
+    }
+
+    /* سمت چپ تاریک، سمت راست (جایی که شخصیت هست) روشن‌تر */
+    .banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(105deg,
+          rgba(10, 10, 20, 0.92) 0%,
+          rgba(10, 10, 20, 0.65) 45%,
+          rgba(10, 10, 20, 0.10) 100%
+        ),
+        linear-gradient(to bottom,
+          transparent 60%,
+          rgba(10, 10, 20, 1) 100%
+        );
+      z-index: 1;
+    }
+
+    /* خط نئون حذف شد */
+
+    .main-banner .container {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* محو شدن تدریجی متن از پایین */
+    .banner-text-wrap {
+      animation: fadeUp 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-banner .caption h6 {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #00c8ff;
+      border-left: 3px solid #00c8ff;
+      padding-left: 12px;
+      margin-bottom: 20px;
+    }
+
+    .main-banner .caption h2 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(0,200,255,0.25);
+      margin-bottom: 20px;
+    }
+
+    .main-banner .caption p {
+      color: rgba(255,255,255,0.72);
+      font-size: 15px;
+      line-height: 1.8;
+      max-width: 480px;
+      margin-bottom: 32px;
+    }
+
+    /* بج "جدید" */
+    .banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,200,255,0.12);
+      border: 1px solid rgba(0,200,255,0.35);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: #00c8ff;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .banner-badge span.dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #00c8ff;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ===== یکسان‌سازی سایز عکس‌ها ===== */
+    .trending-box .item .thumb {
+      position: relative;
+      width: 100%;
+      padding-top: 100%;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .trending-box .item .thumb a {
+      position: absolute;
+      inset: 0;
+      display: block;
+    }
+
+    .trending-box .item .thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .trending-box .item .thumb img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+
+  <div class="main-banner">
+    <div class="banner-bg"></div>
+    <div class="banner-overlay"></div>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 align-self-center">
+          <div class="caption header-text banner-text-wrap">
+            <h2>بهترین سایت <span style="color:#00c8ff;">بازی</span> و <span style="color:#f25563;">نرم افزار</span></h2>
+            <div class="search-input">
+              <form id="search" action="#">
+                <input type="text" placeholder="چیزی تایپ کنید..." name="searchKeyword" tabindex="-1" style="caret-color:transparent;" onfocus="this.blur();" />
+                <button role="button">جستجو</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section trending">
+    <div class="container">
+<ul class="trending-filter">
+
+    <li>
+        <a href="{% url 'shop' %}">مشاهده همه</a>
+    </li>
+
+    <li>
+        <a href="{% url 'shop' %}?category=action">اکشن</a>
+    </li>
+
+    <li>
+        <a href="{% url 'shop' %}?category=adventure">ماجراجویی</a>
+    </li>
+
+    <li>
+        <a href="{% url 'shop' %}?category=sport">ورزشی</a>
+    </li>
+
+    <li>
+        <a href="{% url 'shop' %}?category=race">مسابقه</a>
+    </li>
+<li>
+  <a href="{% url 'shop' %}?category=fight">مبارزه ای</a>
+</li>
+</ul>
+
+      <div class="row trending-box">
+        {% for item in shops %}
+        <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items {{ item.category }}">
+          <div class="item">
+            <div class="thumb">
+              <a href="{% url 'add_shop_to_cart' item.id %}">
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+              </a>
+            </div>
+            <div class="down-content">
+              <span class="category">{{ item.get_category_display }}</span>
+              <h4>{{ item.title }}</h4>
+              <span class="price">{{ item.gheymat }} تومان</span>
+              <a href="{% url 'add_shop_to_cart' item.id %}">
+                <i class="fa fa-shopping-bag"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-lg-12 text-center">
+          <p>هیچ محصولی موجود نیست.</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="row">
+        <div class="col-lg-12">
+          <ul class="pagination">
+
+            {% if page_obj.has_previous %}
+            <li>
+              <a href="?{% if category %}category={{ category }}&{% endif %}page={{ page_obj.previous_page_number }}"> &lt; </a>
+            </li>
+            {% else %}
+            <li class="disabled"><a href="#"> &lt; </a></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li><a class="is_active" href="?{% if category %}category={{ category }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+              {% else %}
+                <li><a href="?{% if category %}category={{ category }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li>
+              <a href="?{% if category %}category={{ category }}&{% endif %}page={{ page_obj.next_page_number }}"> &gt; </a>
+            </li>
+            {% else %}
+            <li class="disabled"><a href="#"> &gt; </a></li>
+            {% endif %}
+
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

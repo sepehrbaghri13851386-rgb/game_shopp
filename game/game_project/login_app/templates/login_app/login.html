@@ -1,0 +1,46 @@
+{% extends 'login_app/base.html' %}
+{% block title %}ورود{% endblock %}
+
+{% block content %}
+<div class="center-wrap">
+  <div class="card" role="region" aria-label="فرم ورود">
+    <header class="head">
+      <div class="brand2">
+        <div class="logo2">L</div>
+        <div>
+          <h1>خوش آمدید — وارد شوید</h1>
+          <p class="sub">به حساب کاربری خود وارد شوید</p>
+        </div>
+      </div>
+    </header>
+
+    <form action="{% url 'login' %}" method="post" novalidate>
+      {% csrf_token %}
+      {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+      <div class="field">
+        <label for="email">ایمیل</label>
+        <div class="input">
+          <input id="email" name="email" type="email" placeholder="example@domain.com" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password">رمز عبور</label>
+        <div class="input">
+          <input id="password" name="password" type="password" placeholder="••••••••" minlength="6" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="checkbox"><input type="checkbox" name="remember"> مرا به خاطر بسپار</label>
+        <a href="#">فراموشی رمز؟</a>
+      </div>
+
+      <button class="btn" type="submit">ورود</button>
+    </form>
+
+    <div class="foot">حساب ندارید؟ <a href="{% url 'register' %}">ثبت‌نام کنید</a></div>
+  </div>
+</div>
+{% endblock %}

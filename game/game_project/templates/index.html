@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contect %}
+  <style>
+    .main-banner {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .banner-bg {
+      position: absolute;
+      top: -5%;
+      left: -5%;
+      right: -5%;
+      bottom: -5%;
+      background-image: url("{% static 'assets/images/banner-game.jpg' %}");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      animation: subtleZoom 8s ease-out forwards;
+      z-index: 0;
+    }
+
+    @keyframes subtleZoom {
+      from { transform: scale(1.08); }
+      to   { transform: scale(1.0); }
+    }
+
+    .banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(105deg,
+          rgba(10, 10, 20, 0.92) 0%,
+          rgba(10, 10, 20, 0.65) 45%,
+          rgba(10, 10, 20, 0.10) 100%
+        ),
+        linear-gradient(to bottom,
+          transparent 60%,
+          rgba(10, 10, 20, 1) 100%
+        );
+      z-index: 1;
+    }
+
+    .main-banner .container {
+      position: relative;
+      z-index: 3;
+    }
+
+    .banner-text-wrap {
+      animation: fadeUp 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-banner .caption h6 {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #00c8ff;
+      border-left: 3px solid #00c8ff;
+      padding-left: 12px;
+      margin-bottom: 20px;
+    }
+
+    .main-banner .caption h2 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(0,200,255,0.25);
+      margin-bottom: 20px;
+    }
+
+    .main-banner .caption p {
+      color: rgba(255,255,255,0.72);
+      font-size: 15px;
+      line-height: 1.8;
+      max-width: 480px;
+      margin-bottom: 32px;
+    }
+
+    .banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,200,255,0.12);
+      border: 1px solid rgba(0,200,255,0.35);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: #00c8ff;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .banner-badge span.dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #00c8ff;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ===== CATEGORIES ===== */
+    .section.categories {
+      padding: 80px 0;
+    }
+
+    .categories .item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .categories .item h4 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      margin: 0;
+      padding: 18px 16px 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, transparent 100%);
+      transition: padding 0.3s ease;
+    }
+
+    .categories .item .thumb {
+      width: 100%;
+      height: 280px;
+      overflow: hidden;
+    }
+
+    .categories .item .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .categories .item:hover .thumb img {
+      transform: scale(1.08);
+    }
+
+    .categories .item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .categories .item:hover::after {
+      border-color: #00c8ff;
+      box-shadow: 0 0 18px rgba(0,200,255,0.35);
+    }
+  </style>
+
+  <!-- ===== BANNER ===== -->
+  <div class="main-banner">
+    <div class="banner-bg"></div>
+    <div class="banner-overlay"></div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 align-self-center">
+          <div class="caption header-text banner-text-wrap">
+            <h2>بهترین سایت <span style="color:#00c8ff;">بازی</span> و <span style="color:#f25563;">نرم افزار</span></h2>
+            <div class="search-input">
+              <form id="search" action="{% url 'search' %}" method="GET">
+                <input type="text" placeholder="جستجو در بازی‌ها و نرم‌افزارها..." name="q" tabindex="1" style="caret-color:auto;" />
+                <button type="submit">جستجو</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TRENDING ===== -->
+  <div class="section trending">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="section-heading">
+            <h6>پرطرفدار</h6>
+            <h2>بازی های پرطرفدار</h2>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="main-button">
+            <a href="{% url 'shop' %}">مشاهده همه</a>
+          </div>
+        </div>
+
+        {% for game in games %}
+        <div class="col-lg-3 col-md-6">
+          <div class="item">
+            <div class="thumb">
+              <a href="{% url 'product_detail' game.id %}">
+                <img src="{{ game.image.url }}" alt="{{ game.title }}">
+              </a>
+              <span class="price price-format">{{ game.gheymat }}</span>
+            </div>
+            <div class="down-content">
+              <span class="category">{{ game.get_genre_display }}</span>
+              <h4>{{ game.title }}</h4>
+              <a href="{% url 'product_detail' game.id %}">
+                <i class="fa fa-shopping-bag"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MOST PLAYED ===== -->
+  <div class="section most-played">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="section-heading">
+            <h6>بازی های برتر</h6>
+            <h2>بیشترین بازی شده</h2>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="main-button">
+            <a href="{% url 'shop' %}">مشاهده همه</a>
+          </div>
+        </div>
+
+        {% for game in games %}
+        <div class="col-lg-2 col-md-6 col-sm-6">
+          <div class="item">
+            <div class="thumb">
+              <a href="{% url 'product_detail' game.id %}">
+                <img src="{{ game.image.url }}" alt="{{ game.title }}">
+              </a>
+            </div>
+            <div class="down-content">
+              <span class="category">{{ game.get_genre_display }}</span>
+              <h4>{{ game.title }}</h4>
+              <a href="{% url 'product_detail' game.id %}">کاوش کنید</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CATEGORIES ===== -->
+  <div class="section categories">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <div class="section-heading">
+            <h6>دسته بندی ها</h6>
+            <h2>برترین دسته بندی ها</h2>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6 col-xs-12">
+          <div class="item">
+            <div class="thumb">
+              <a href="{% url 'shop' %}">
+                <img src="{% static 'assets/images/n00134524-b.jpg' %}" alt="بتل رویال">
+              </a>
+            </div>
+            <h4>بتل رویال</h4>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6 col-xs-12">
+          <div class="item">
+            <div class="thumb">
+              <a href="{% url 'shop' %}">
+                <img src="{% static 'assets/images/Warzone-9.webp' %}" alt="مولتی پلیر">
+              </a>
+            </div>
+            <h4>مولتی پلیر / بتل رویال</h4>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6 col-xs-12">
+          <div class="item">
+            <div class="thumb">
+              <a href="{% url 'shop' %}">
+                <img src="{% static 'assets/images/1111111.webp' %}" alt="ورزشی">
+              </a>
+            </div>
+            <h4>ورزشی</h4>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6 col-xs-12">
+          <div class="item">
+            <div class="thumb">
+              <a href="{% url 'shop' %}">
+                <img src="{% static 'assets/images/007-First-Light.jpg' %}" alt="اکشن">
+              </a>
+            </div>
+            <h4>اکشن</h4>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CTA ===== -->
+  <div class="section cta">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5">
+          <div class="shop">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="section-heading">
+                  <h6>فروشگاه</h6>
+                  <h2>پیش خرید کنید و بهترین <em>قیمت‌ها</em> را برای خود دریافت کنید!</h2>
+                </div>
+                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
+                <div class="main-button">
+                  <a href="{% url 'shop' %}">خرید</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-2 align-self-end">
+          <div class="subscribe">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="section-heading">
+                  <h6>خبرنامه</h6>
+                  <h2>تا 100 دلار تخفیف بگیرید فقط خبرنامه <em>اشتراک</em> بخرید!</h2>
+                </div>
+                <div class="search-input">
+                  <form id="subscribe" action="#">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your email...">
+                    <button type="submit">عضویت</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== فرمت‌بندی قیمت ===== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.price-format').forEach(function (el) {
+        var raw = el.textContent.trim().replace(/[^\d]/g, '');
+        if (raw) {
+          el.textContent = Number(raw).toLocaleString('fa-IR') + ' تومان';
+        }
+      });
+    });
+  </script>
+
+
+{% endblock %}

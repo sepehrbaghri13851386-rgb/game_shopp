@@ -1,0 +1,672 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contect %}
+
+<style>
+  html, body { overflow-x: hidden !important; direction: rtl; }
+
+  /* ===== صفحه سبد خرید ===== */
+  .cart-page {
+    background: #0c0c1e;
+    min-height: 80vh;
+    padding: 60px 0 80px;
+  }
+
+  .cart-page h2 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 40px;
+  }
+
+  .cart-page h2 span {
+    color: #f25563;
+  }
+
+  /* ===== جدول سبد ===== */
+  .cart-table-wrap {
+    background: #15152b;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+
+  .cart-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .cart-table thead th {
+    background: #1e1e38;
+    color: #c9c9d6;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 18px 20px;
+    text-align: right;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .cart-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+  }
+
+  .cart-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .cart-table tbody tr:hover {
+    background: rgba(242,85,99,0.04);
+  }
+
+  .cart-table tbody td {
+    padding: 20px;
+    color: #fff;
+    vertical-align: middle;
+  }
+
+  /* ===== محصول در سبد ===== */
+  .cart-product {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cart-product img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.08);
+  }
+
+  .cart-product-info .name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .cart-product-info .category {
+    color: #c9c9d6;
+    font-size: 13px;
+  }
+
+  /* ===== قیمت ===== */
+  .cart-price {
+    color: #f25563;
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  /* ===== کنترل تعداد ===== */
+  .qty-control {
+    display: inline-flex;
+    align-items: center;
+    background: #1e1e38;
+    border-radius: 30px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .qty-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qty-btn:hover {
+    background: rgba(242,85,99,0.2);
+    color: #f25563;
+  }
+
+  .qty-num {
+    color: #fff;
+    font-weight: 600;
+    min-width: 32px;
+    text-align: center;
+    font-size: 15px;
+  }
+
+  /* ===== دکمه حذف ===== */
+  .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #c9c9d6;
+    font-size: 18px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .remove-btn:hover {
+    background: rgba(242,85,99,0.15);
+    color: #f25563;
+  }
+
+  /* ===== خلاصه سفارش ===== */
+  .order-summary {
+    background: #15152b;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 100px;
+  }
+
+  .order-summary h5 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+
+  .summary-row .label {
+    color: #c9c9d6;
+  }
+
+  .summary-row .value {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .summary-row.total {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 17px;
+  }
+
+  .summary-row.total .label {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .summary-row.total .value {
+    color: #f25563;
+    font-size: 20px;
+  }
+
+  /* ===== کوپن ===== */
+  .coupon-wrap {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+  }
+
+  .coupon-input {
+    flex: 1;
+    background: #1e1e38;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .coupon-input::placeholder {
+    color: #6b6b8f;
+  }
+
+  .coupon-input:focus {
+    border-color: #f25563;
+  }
+
+  .coupon-btn {
+    background: #1e1e38;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #c9c9d6;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .coupon-btn:hover {
+    border-color: #f25563;
+    color: #f25563;
+  }
+
+  /* ===== دکمه پرداخت ===== */
+  .checkout-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #f25563, #c0392b);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-top: 10px;
+  }
+
+  .checkout-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .continue-btn {
+    display: block;
+    width: 100%;
+    background: transparent;
+    color: #c9c9d6;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+    margin-top: 10px;
+  }
+
+  .continue-btn:hover {
+    border-color: #fff;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* ===== سبد خالی ===== */
+  .empty-cart {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .empty-cart svg {
+    margin-bottom: 24px;
+    opacity: 0.3;
+  }
+
+  .empty-cart h4 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .empty-cart p {
+    color: #c9c9d6;
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+
+  /* ===== آیتم‌های سبد خالی ===== */
+  .empty-cart-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #1e1e38;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin: 8px auto;
+    max-width: 380px;
+    border: 1px solid rgba(255,255,255,0.07);
+    text-align: right;
+  }
+
+  .empty-cart-item img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+
+  .empty-cart-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .empty-cart-item-name {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .empty-cart-item-price {
+    color: #f25563;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* ===== بج تعداد ===== */
+  .cart-count-badge {
+    background: #f25563;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* ===== ریسپانسیو ===== */
+  @media (max-width: 768px) {
+    .cart-table thead { display: none; }
+    .cart-table tbody tr {
+      display: block;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      background: #1e1e38;
+      border: none !important;
+      padding: 16px;
+    }
+    .cart-table tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .cart-table tbody td:last-child { border-bottom: none; }
+    .cart-table tbody td::before {
+      content: attr(data-label);
+      color: #c9c9d6;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 80px;
+    }
+    .cart-product { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ===== هدر آیکون سبد ===== */
+  .nav-cart-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .nav-cart-icon .badge-dot {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    background: #f25563;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+
+  <!-- ***** Cart Page Start ***** -->
+  <section class="cart-page">
+    <div class="container">
+
+      <h2 style="margin-top: 80px;">سبد <span>خرید</span></h2>
+
+      {% if cart_items %}
+
+      <div class="row">
+
+        <!-- ===== جدول محصولات ===== -->
+        <div class="col-lg-8 col-md-12" style="margin-bottom:30px;">
+          <div class="cart-table-wrap">
+            <table class="cart-table">
+              <thead>
+                <tr>
+                  <th>محصول</th>
+                  <th>قیمت</th>
+                  <th>تعداد</th>
+                  <th>جمع</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart_items %}
+                <tr>
+                  <!-- محصول -->
+                  <td data-label="محصول">
+                    <div class="cart-product">
+                    {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                     {% else %}
+                    <img src="{% static 'assets/images/product-placeholder.jpg' %}" alt="{{ item.product.name }}">
+                      {% endif %}
+                      <div class="cart-product-info">
+                        <div class="name">{{ item.product.name }}</div>
+                        <div class="category">{{ item.product.category }}</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- قیمت واحد -->
+                  <td data-label="قیمت">
+                    <span class="cart-price">{{ item.product.price|floatformat:0 }} تومان</span>
+                  </td>
+
+                  <!-- تعداد -->
+                  <td data-label="تعداد">
+                    <div class="qty-control">
+                      <a href="{% url 'cart_decrease' item.product.id %}" class="qty-btn" title="کاهش">−</a>
+                      <span class="qty-num">{{ item.quantity }}</span>
+                      <a href="{% url 'cart_increase' item.product.id %}" class="qty-btn" title="افزایش">+</a>
+                    </div>
+                  </td>
+
+                  <!-- جمع ردیف -->
+                  <td data-label="جمع">
+                    <span class="cart-price">{{ item.total_price|floatformat:0 }} تومان</span>
+                  </td>
+
+                  <!-- حذف -->
+                  <td data-label="حذف">
+                    <a href="{% url 'cart_remove' item.product.id %}" class="remove-btn" title="حذف از سبد">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                        <path d="M10 11v6"></path>
+                        <path d="M14 11v6"></path>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                      </svg>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- دکمه ادامه خرید -->
+          <a href="{% url 'checkout' %}" class="continue-btn" style="margin-top:20px;display:inline-block;width:auto;padding:12px 30px;">
+            ← ادامه خرید
+          </a>
+        </div>
+
+        <!-- ===== خلاصه سفارش ===== -->
+        <div class="col-lg-4 col-md-12">
+          <div class="order-summary">
+            <h5>خلاصه سفارش</h5>
+
+            <div class="summary-row">
+              <span class="label">تعداد اقلام</span>
+              <span class="value">{{ cart_total_qty }} عدد</span>
+            </div>
+
+            <div class="summary-row">
+              <span class="label">جمع کل</span>
+              <span class="value">{{ cart_subtotal|floatformat:0 }} تومان</span>
+            </div>
+
+            <div class="summary-row">
+              <span class="label">هزینه ارسال</span>
+              <span class="value">
+                {% if shipping_cost == 0 %}
+                  <span style="color:#2ecc71;">رایگان</span>
+                {% else %}
+                  {{ shipping_cost|floatformat:0 }} تومان
+                {% endif %}
+              </span>
+            </div>
+
+            {% if discount_amount %}
+            <div class="summary-row">
+              <span class="label">تخفیف</span>
+              <span class="value" style="color:#2ecc71;">− {{ discount_amount|floatformat:0 }} تومان</span>
+            </div>
+            {% endif %}
+
+            <!-- کوپن -->
+            <form method="POST" action=""></form>
+              {% csrf_token %}
+              <div class="coupon-wrap">
+                <input type="text" name="coupon_code" class="coupon-input" placeholder="کد تخفیف دارید؟">
+                <button type="submit" class="coupon-btn">اعمال</button>
+              </div>
+            </form>
+
+            {% if coupon_error %}
+            <p style="color:#f25563;font-size:13px;margin-top:-10px;margin-bottom:10px;">{{ coupon_error }}</p>
+            {% endif %}
+            {% if coupon_success %}
+            <p style="color:#2ecc71;font-size:13px;margin-top:-10px;margin-bottom:10px;">{{ coupon_success }}</p>
+            {% endif %}
+
+            <div class="summary-row total">
+              <span class="label">قابل پرداخت</span>
+              <span class="value">{{ cart_total|floatformat:0 }} تومان</span>
+            </div>
+
+            <a href="{% url 'checkout' %}" class="checkout-btn">
+              پرداخت و تکمیل خرید ←
+            </a>
+
+            <!-- نشان اعتماد -->
+            <div style="display:flex;justify-content:center;gap:20px;margin-top:25px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07);">
+              <div style="text-align:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div style="color:#c9c9d6;font-size:11px;">پرداخت امن</div>
+              </div>
+              <div style="text-align:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <div style="color:#c9c9d6;font-size:11px;">ارسال سریع</div>
+              </div>
+              <div style="text-align:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <div style="color:#c9c9d6;font-size:11px;">ضمانت بازگشت</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      {% else %}
+
+      <!-- ===== سبد خالی ===== -->
+      <div class="cart-table-wrap">
+        <div class="empty-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <h4>سبد خرید شما خالی است</h4>
+          <p>محصولی به سبد خرید اضافه نشده است.</p>
+
+          {% for id, item in cart.items %}
+          <div class="empty-cart-item">
+            <img src="{{ item.image }}" alt="{{ item.title }}">
+            <div class="empty-cart-item-info">
+              <span class="empty-cart-item-name">{{ item.title }}</span>
+              <span class="empty-cart-item-price">{{ item.price }} تومان</span>
+            </div>
+          </div>
+          {% endfor %}
+
+          <a href="{% url 'shop' %}" class="checkout-btn" style="display:inline-block;width:auto;padding:14px 40px;margin:0 auto;">
+            برو به فروشگاه ←
+          </a>
+        </div>
+      </div>
+
+      {% endif %}
+
+    </div>
+  </section>
+  <!-- ***** Cart Page End ***** -->
+
+  <!-- ===== فرمت‌بندی قیمت با جداکننده سه‌تایی ===== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.cart-price, .price-format').forEach(function (el) {
+        var text = el.textContent.trim();
+        var raw = text.replace(/[^\d]/g, '');
+        if (raw) {
+          el.textContent = Number(raw).toLocaleString('fa-IR') + ' تومان';
+        }
+      });
+
+      document.querySelectorAll('.summary-row .value').forEach(function (el) {
+        var text = el.textContent.trim();
+        var raw = text.replace(/[^\d]/g, '');
+        if (raw && text.indexOf('تومان') !== -1) {
+          el.textContent = Number(raw).toLocaleString('fa-IR') + ' تومان';
+        }
+      });
+
+      document.querySelectorAll('.empty-cart-item-price').forEach(function (el) {
+        var text = el.textContent.trim();
+        var raw = text.replace(/[^\d]/g, '');
+        if (raw) {
+          el.textContent = Number(raw).toLocaleString('fa-IR') + ' تومان';
+        }
+      });
+    });
+  </script>
+
+{% endblock %}

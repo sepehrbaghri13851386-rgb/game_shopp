@@ -1,0 +1,154 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block contect %}
+
+<style>
+  .contact-banner {
+    position: relative;
+    min-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ======== آدرس عکس پس‌زمینه رو اینجا عوض کن — خط ۱۴ ======== */
+  .contact-banner-bg {
+    position: absolute;
+    top: -5%; left: -5%; right: -5%; bottom: -5%;
+    background-image: url("{% static 'assets/images/3407274 (1).jpg' %}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+    background-position: center 20%;
+    animation: contactZoom 8s ease-out forwards;
+    z-index: 0;
+  }
+
+  @keyframes contactZoom {
+    from { transform: scale(1.08); }
+    to   { transform: scale(1.0); }
+  }
+
+  .contact-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(105deg,
+        rgba(10,10,20,0.88) 0%,
+        rgba(10,10,20,0.55) 50%,
+        rgba(10,10,20,0.15) 100%
+      ),
+      linear-gradient(to bottom,
+        transparent 50%,
+        rgba(10,10,20,1) 100%
+      );
+    z-index: 1;
+  }
+
+  .contact-banner .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .contact-banner h3 {
+    color: #fff;
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    animation: fadeUp .9s ease-out .2s both;
+  }
+
+  .contact-banner .breadcrumb {
+    animation: fadeUp .9s ease-out .35s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="contact-banner">
+  <div class="contact-banner-bg"></div>
+  <div class="contact-banner-overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3>تماس با ما</h3>
+        <span class="breadcrumb" color="red"><a href="#">خانه</a>  >  تماس با ما</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="contact-page section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 align-self-center">
+          <div class="left-text">
+            <div class="section-heading">
+              <h6>تماس با ما</h6>
+              <h2>بگو سلام!</h2>
+            </div>
+
+            <ul>
+              <li><span>آدرس</span> ایران/خوزستان </li>
+              <li><span>تلفن</span> 0992_878_4959 </li>
+              <li><span>ایمیل</span> sepehrbaghri1385.1386@email.com</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="right-content">
+            <div class="row">
+              <div class="col-lg-12">
+                <div id="map">
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12469.776493332698!2d-80.14036379941481!3d25.907788681148624!2m3!1f357.26927939317244!2f20.870722720054623!3f0!3m2!1i1024!2i768!4f35!3m3!1m2!1s0x88d9add4b4ac788f%3A0xe77469d09480fcdb!2sSunny%20Isles%20Beach!5e1!3m2!1sen!2sth!4v1642869952544!5m2!1sen!2sth" width="100%" height="325px" frameborder="0" style="border:0; border-radius: 23px;" allowfullscreen=""></iframe>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <form id="contact-form" action="{% url 'contact'%}" method="post">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="text" name="name" id="name" placeholder="نام..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="text" name="lastname" id="lastname" placeholder="نام خانوادگی..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="ایمیل..." required="">
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="text" name="tiltle" id="tiltle" placeholder="موضوع..." autocomplete="on" >
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-12">
+                      <fieldset>
+                        <textarea name="discribshen" id="discribshen" placeholder="پیام..."></textarea>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-12">
+                      <fieldset>
+                        <button type="submit" id="form-submit" class="orange-button">ارسال پیام</button>
+                      </fieldset>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+ 
+{% endblock %}

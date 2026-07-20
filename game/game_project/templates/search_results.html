@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contect %}
+
+<style>
+  .search-page {
+    min-height: 70vh;
+    padding: 100px 0 60px;
+    background: #0a0a14;
+  }
+  .search-page .section-heading h6 {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: #00c8ff; font-weight: 600; margin-bottom: 8px;
+  }
+  .search-page .section-heading h2 {
+    color: #fff; font-size: 28px; font-weight: 700; margin-bottom: 6px;
+  }
+  .search-page .result-count {
+    color: rgba(255,255,255,0.45); font-size: 13px; margin-bottom: 40px;
+  }
+  .search-page .result-count span { color: #00c8ff; font-weight: 600; }
+  .search-page .search-bar {
+    display: flex; gap: 10px; margin-bottom: 50px; max-width: 560px;
+  }
+  .search-page .search-bar input {
+    flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 12px 18px; color: #fff; font-size: 14px;
+    outline: none; transition: border-color .25s;
+  }
+  .search-page .search-bar input:focus { border-color: #00c8ff; }
+  .search-page .search-bar button {
+    background: #00c8ff; border: none; border-radius: 8px; padding: 12px 24px;
+    color: #000; font-weight: 700; font-size: 13px; cursor: pointer; transition: opacity .2s;
+  }
+  .search-page .search-bar button:hover { opacity: 0.85; }
+  .search-group-title {
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    color: #f25563; font-weight: 600; margin-bottom: 20px;
+    border-right: 3px solid #f25563; padding-right: 10px;
+  }
+  .search-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; overflow: hidden; transition: border-color .25s, transform .25s; height: 100%;
+  }
+  .search-card:hover { border-color: #00c8ff; transform: translateY(-4px); }
+  .search-card .thumb { width: 100%; height: 180px; overflow: hidden; }
+  .search-card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .search-card:hover .thumb img { transform: scale(1.06); }
+  .search-card .card-body-custom { padding: 16px; }
+  .search-card .card-category { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #00c8ff; margin-bottom: 6px; }
+  .search-card .card-title { color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 10px; line-height: 1.4; }
+  .search-card .card-price { color: #f25563; font-size: 13px; font-weight: 600; }
+  .search-card .card-link {
+    display: inline-block; margin-top: 12px; font-size: 12px; color: #00c8ff;
+    text-decoration: none; border: 1px solid rgba(0,200,255,0.3);
+    border-radius: 20px; padding: 5px 14px; transition: background .2s;
+  }
+  .search-card .card-link:hover { background: rgba(0,200,255,0.12); }
+  .no-results { text-align: center; padding: 60px 0; }
+  .no-results i { font-size: 48px; margin-bottom: 16px; display: block; color: rgba(255,255,255,0.15); }
+  .no-results h3 { color: rgba(255,255,255,0.6); font-size: 20px; margin-bottom: 8px; }
+  .no-results p { color: rgba(255,255,255,0.35); font-size: 14px; }
+  .divider-section { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 40px 0; }
+</style>
+
+<div class="search-page">
+  <div class="container">
+    <div class="section-heading">
+      <h6>نتایج جستجو</h6>
+      <h2>
+        {% if query %}
+          نتایج برای «<span style="color:#00c8ff;">{{ query }}</span>»
+        {% else %}
+          جستجو کنید
+        {% endif %}
+      </h2>
+    </div>
+
+    {% if query %}
+      {% with total=game_results.count|add:shop_results.count %}
+      <p class="result-count"><span>{{ total }}</span> نتیجه پیدا شد</p>
+      {% endwith %}
+    {% endif %}
+
+    <form class="search-bar" action="{% url 'search' %}" method="GET">
+      <input type="text" name="q" value="{{ query }}" placeholder="جستجو در بازی‌ها و نرم‌افزارها..." autofocus>
+      <button type="submit">جستجو</button>
+    </form>
+
+    {% if query %}
+      {% if game_results or shop_results %}
+
+        {% if game_results %}
+        <p class="search-group-title">بازی‌ها</p>
+        <div class="row" style="margin-bottom:20px;">
+          {% for g in game_results %}
+          <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="search-card">
+              <div class="thumb">
+                <a href="{% url 'product_detail' g.id %}">
+                  <img src="{{ g.image.url }}" alt="{{ g.title }}">
+                </a>
+              </div>
+              <div class="card-body-custom">
+                <p class="card-category">{{ g.get_genre_display }}</p>
+                <h5 class="card-title">{{ g.title }}</h5>
+                <p class="card-price price-format">{{ g.gheymat }}</p>
+                <a href="{% url 'product_detail' g.id %}" class="card-link">مشاهده محصول</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if game_results and shop_results %}
+        <hr class="divider-section">
+        {% endif %}
+
+        {% if shop_results %}
+        <p class="search-group-title">فروشگاه</p>
+        <div class="row">
+          {% for s in shop_results %}
+          <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="search-card">
+              <div class="thumb">
+                <a href="#">
+                  {% if s.image %}
+                  <img src="{{ s.image.url }}" alt="{{ s.title }}">
+                  {% else %}
+                  <img src="{% static 'assets/images/banner-game.jpg' %}" alt="{{ s.title }}">
+                  {% endif %}
+                </a>
+              </div>
+              <div class="card-body-custom">
+                <p class="card-category">{{ s.category }}</p>
+                <h5 class="card-title">{{ s.title }}</h5>
+                <p class="card-price price-format">{{ s.price }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+      {% else %}
+        <div class="no-results">
+          <i class="fa fa-search"></i>
+          <h3>نتیجه‌ای پیدا نشد</h3>
+          <p>برای «{{ query }}» چیزی در بازی‌ها و فروشگاه پیدا نکردیم.</p>
+        </div>
+      {% endif %}
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.price-format').forEach(function (el) {
+      var raw = el.textContent.trim().replace(/[^\d]/g, '');
+      if (raw) { el.textContent = Number(raw).toLocaleString('fa-IR') + ' تومان'; }
+    });
+  });
+</script>
+
+{% endblock %}

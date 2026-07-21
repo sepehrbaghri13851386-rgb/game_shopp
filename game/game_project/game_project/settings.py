@@ -38,9 +38,10 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "bodacious-undertow-shortwave.ngrok-free.dev",
 ]
-_extra_hosts = os.environ.get('ALLOWED_HOSTS', '')
+
+_extra_hosts = os.environ.get("ALLOWED_HOSTS", "")
 if _extra_hosts:
-    ALLOWED_HOSTS += [h.strip() for h in _extra_hosts.split(',') if h.strip()]
+    ALLOWED_HOSTS += [h.strip() for h in _extra_hosts.split(",") if h.strip()]
 
 
 # Application definition

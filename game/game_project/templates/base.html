@@ -25,6 +25,73 @@
 <body>
 
 
+  <style>
+    /* ===== منوی موبایل (سه‌نقطه) ===== */
+    .mobile-menu-toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 8px 12px;
+      z-index: 999;
+    }
+
+    @media (max-width: 991px) {
+      .main-nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .mobile-menu-toggle {
+        display: inline-block;
+      }
+
+      .main-nav > ul.nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        background: rgba(10, 10, 20, 0.98);
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 10px 20px 20px !important;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+        z-index: 998;
+      }
+
+      .main-nav > ul.nav.mobile-open {
+        display: flex !important;
+      }
+
+      .main-nav > ul.nav li {
+        width: 100%;
+        margin: 0 !important;
+        padding: 10px 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .main-nav > ul.nav li:last-child {
+        border-bottom: none;
+      }
+
+      .nav-user-item {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+      }
+
+      .nav-user-item > div {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+
   <header class="header-area header-sticky">
     <div class="container">
         <div class="row">
@@ -34,7 +101,12 @@
 <a href="/" class="logo">
     <img src="{% static 'assets/images/8b7e64cb-cbcd-4aab-81d8-0aa21a99560e.jpg' %}" alt="" style="width:60px; border-radius: 50%;">
 </a>
-                   <ul class="nav">
+
+<button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="باز کردن منو">
+  &#8942;
+</button>
+
+                   <ul class="nav" id="mainNavList">
 
     <li><a href="/">Home</a></li>
     <li><a href="{% url 'shop' %}">Shop</a></li>
@@ -546,6 +618,24 @@
     window.addEventListener('load', function() {
       var el = document.getElementById('searchText');
       if (el) { el.blur(); }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var toggleBtn = document.getElementById('mobileMenuToggle');
+      var navList = document.getElementById('mainNavList');
+      if (toggleBtn && navList) {
+        toggleBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          navList.classList.toggle('mobile-open');
+        });
+        document.addEventListener('click', function (e) {
+          if (!navList.contains(e.target) && !toggleBtn.contains(e.target)) {
+            navList.classList.remove('mobile-open');
+          }
+        });
+      }
     });
   </script>
 

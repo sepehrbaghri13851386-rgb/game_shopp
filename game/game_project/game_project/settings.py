@@ -33,11 +33,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
 # دامنه‌ی هاستت رو اینجا اضافه کن، مثلاً 'yourdomain.com' و 'www.yourdomain.com'
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "bodacious-undertow-shortwave.ngrok-free.dev",
-]
+ALLOWED_HOSTS = ["*"]
 
 _extra_hosts = os.environ.get("ALLOWED_HOSTS", "")
 if _extra_hosts:

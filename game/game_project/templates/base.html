@@ -10,29 +10,21 @@
 
     <title>game_shap</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
 
-    <!-- Additional CSS Files -->
     <link rel="stylesheet" href="{% static 'assets/css/fontawesome.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/templatemo-lugx-gaming.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/owl.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/fonts.css' %}">
     <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
-<!--
-https://persian-theme.com
--->
+
   </head>
 
 <body>
 
-  <!-- ***** Preloader Start ***** -->
 
-  <!-- ***** Preloader End ***** -->
-
-  <!-- ***** Header Area Start ***** -->
   <header class="header-area header-sticky">
     <div class="container">
         <div class="row">
@@ -55,11 +47,9 @@ https://persian-theme.com
 
     {% if user.is_authenticated %}
 
-    <!-- یوزر آیتم -->
     <li class="nav-user-item" style="margin-left:auto;padding-left:20px;background:transparent !important;">
       <div style="display:flex;align-items:center;gap:10px;">
 
-        <!-- آواتار -->
         <a href="{% url 'profile' %}" style="flex-shrink:0;background:transparent !important;padding:0 !important;">
           {% if user.profile.avatar %}
             <img src="{{ user.profile.avatar.url }}"
@@ -73,12 +63,10 @@ https://persian-theme.com
           {% endif %}
         </a>
 
-        <!-- نام کاربر -->
         <span style="color:rgba(255,255,255,0.75);font-size:13px;font-weight:500;white-space:nowrap;">
           {{ user.username }}
         </span>
 
-        <!-- دکمه خروج -->
         <a href="{% url 'logout' %}" style="
           display:inline-flex !important;align-items:center;gap:6px;
           background:rgba(220,38,38,0.15) !important;
@@ -104,7 +92,6 @@ https://persian-theme.com
     </li>
 
     <style>
-      /* reset استایل‌های قالب روی li یوزر */
       .nav-user-item,
       .nav-user-item:hover,
       .nav-user-item:focus { background: transparent !important; }

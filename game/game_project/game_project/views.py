@@ -28,10 +28,8 @@ def search(request):
 def product_detail(request, id):
     product = get_object_or_404(game, id=id)
     
-    # بازی‌های مشابه از مدل game
     related_games = game.objects.filter(genre=product.genre).exclude(id=id)[:4]
     
-    # بازی‌های مشابه از مدل Shop (با همون category که برابر genre هست)
     related_shops = Shop.objects.filter(category=product.genre)[:4]
     
     return render(request, 'product-details.html', {

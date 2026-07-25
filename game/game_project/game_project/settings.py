@@ -161,10 +161,9 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
-
 # -----------------------------
 # Production security settings
 # فقط وقتی DEBUG=False فعال باشن (یعنی روی هاست واقعی)

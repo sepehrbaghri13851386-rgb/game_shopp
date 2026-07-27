@@ -123,8 +123,8 @@
       <div style="display:flex;align-items:center;gap:10px;">
 
         <a href="{% url 'profile' %}" style="flex-shrink:0;background:transparent !important;padding:0 !important;">
-          {% if user.profile.avatar %}
-            <img src="{{ user.profile.avatar.url }}"
+          {% if user.profile.image %}
+            <img src="{{ user.profile.image.url }}"
               style="width:60px;height:60px;border-radius:50%;object-fit:cover;
                      border:2px solid rgba(255,255,255,0.35);
                      box-shadow:0 0 0 3px rgba(0,200,255,0.25);display:block;">

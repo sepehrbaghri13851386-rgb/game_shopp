@@ -28,3 +28,4 @@ class Shop(models.Model):
     class Meta:
         verbose_name = 'محصول'
         verbose_name_plural = 'محصولات'
+        db_table = 'game_shop_products'

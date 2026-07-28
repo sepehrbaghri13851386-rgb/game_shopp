@@ -53,8 +53,8 @@
 
       .main-nav > ul.nav {
         display: none;
-        position: absolute;
-        top: 100%;
+        position: fixed;
+        top: var(--header-h, 70px);
         right: 20px;
         left: 20px;
         background: #ffffff;
@@ -62,8 +62,8 @@
         align-items: stretch !important;
         padding: 8px 0 !important;
         border-radius: 14px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-        z-index: 998;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        z-index: 99999;
         overflow: hidden;
       }
 
@@ -136,7 +136,7 @@
 
     {% if user.is_authenticated %}
 
-    <li class="nav-user-item" style="margin-left:auto;background:#fff !important;">
+    <li class="nav-user-item" style="margin-left:auto;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;">
 
         <div style="display:flex;align-items:center;gap:10px;">
@@ -636,13 +636,31 @@
     document.addEventListener('DOMContentLoaded', function () {
       var toggleBtn = document.getElementById('mobileMenuToggle');
       var navList = document.getElementById('mainNavList');
+      var headerEl = document.querySelector('.header-area');
+
+      function setHeaderHeightVar() {
+        if (headerEl) {
+          var h = headerEl.offsetHeight;
+          document.documentElement.style.setProperty('--header-h', h + 'px');
+        }
+      }
+      setHeaderHeightVar();
+      window.addEventListener('resize', setHeaderHeightVar);
+      window.addEventListener('load', setHeaderHeightVar);
+
       if (toggleBtn && navList) {
         toggleBtn.addEventListener('click', function (e) {
           e.stopPropagation();
+          setHeaderHeightVar();
           navList.classList.toggle('mobile-open');
         });
         document.addEventListener('click', function (e) {
           if (!navList.contains(e.target) && !toggleBtn.contains(e.target)) {
+            navList.classList.remove('mobile-open');
+          }
+        });
+        window.addEventListener('resize', function () {
+          if (window.innerWidth > 991) {
             navList.classList.remove('mobile-open');
           }
         });

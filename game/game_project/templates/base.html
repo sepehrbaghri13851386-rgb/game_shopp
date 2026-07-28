@@ -673,6 +673,22 @@
       placeNavForViewport();
       window.addEventListener('resize', placeNavForViewport);
 
+      // واچ‌داگ: بعضی اسکریپت‌های دیگه‌ی صفحه ممکنه با یه تاخیر (مثلاً بعد لود عکس‌ها)
+      // دوباره منو رو مخفی/جابه‌جا کنن. برای همین چند بار پشت‌سرهم تا ۴ ثانیه‌ی اول
+      // وضعیت درست رو دوباره اعمال می‌کنیم تا هرچی اون اسکریپت خراب کرد، برگردونیم.
+      var watchdogTicks = 0;
+      var watchdogTimer = setInterval(function () {
+        placeNavForViewport();
+        if (navList) {
+          navList.style.setProperty('visibility', 'visible', 'important');
+          if (window.innerWidth > 991) {
+            navList.style.setProperty('display', 'flex', 'important');
+          }
+        }
+        watchdogTicks++;
+        if (watchdogTicks > 10) { clearInterval(watchdogTimer); }
+      }, 400);
+
       function setHeaderHeightVar() {
         if (headerEl) {
           var h = headerEl.getBoundingClientRect().height;

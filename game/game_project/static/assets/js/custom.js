@@ -22,15 +22,8 @@
 	  }
 	})
 
-	var width = $(window).width();
-		$(window).resize(function() {
-		if (width > 767 && $(window).width() < 767) {
-			location.reload();
-		}
-		else if (width < 767 && $(window).width() > 767) {
-			location.reload();
-		}
-	})
+	// (کد قدیمی ری‌لود خودکار صفحه هنگام رد شدن از ۷۶۷ پیکسل حذف شد،
+	// چون باعث می‌شد صفحه به‌طور ناخواسته رفرش بشه و محتوا "غیب" به نظر برسه)
 
 	const elem = document.querySelector('.trending-box');
 	const filtersElem = document.querySelector('.trending-filter');

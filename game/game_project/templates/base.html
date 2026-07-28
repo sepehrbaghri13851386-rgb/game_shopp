@@ -122,8 +122,10 @@
             <div class="col-12">
                 <nav class="main-nav">
 
-<a href="/" class="logo">
-    <img src="{% static 'assets/images/8b7e64cb-cbcd-4aab-81d8-0aa21a99560e.jpg' %}" alt="" style="width:60px; border-radius: 50%;">
+<a href="/" class="logo" style="overflow:visible !important; height:auto !important; display:inline-flex !important; align-items:center;">
+    <img src="{% static 'assets/images/8b7e64cb-cbcd-4aab-81d8-0aa21a99560e.jpg' %}" alt=""
+      style="width:60px !important; height:60px !important; min-height:60px !important;
+             border-radius:50% !important; object-fit:cover !important; display:block !important;">
 </a>
 
 <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="باز کردن منو">
@@ -645,12 +647,31 @@
       var navList = document.getElementById('mainNavList');
       var headerEl = document.querySelector('.main-nav');
 
-      // منو رو از داخل هدر می‌کشیم بیرون و مستقیم زیر body می‌ذاریم
-      // تا هیچ لایه یا افکت رنگی هدر (که پشت‌صحنه روش transform/overflow داره)
-      // نتونه روش یا زیرش قرار بگیره
-      if (navList && navList.parentElement !== document.body) {
-        document.body.appendChild(navList);
+      var navOriginalParent = navList ? navList.parentElement : null;
+      var navOriginalNextSibling = navList ? navList.nextSibling : null;
+
+      function placeNavForViewport() {
+        if (!navList) return;
+        if (window.innerWidth <= 991) {
+          // فقط تو حالت موبایل، منو رو می‌کشیم بیرون و می‌ذاریم زیر body
+          // تا هیچ لایه یا افکت رنگی هدر نتونه روش یا زیرش قرار بگیره
+          if (navList.parentElement !== document.body) {
+            document.body.appendChild(navList);
+          }
+        } else {
+          // تو دسکتاپ، منو باید دقیقاً سرجای اصلی خودش داخل نوار هدر بمونه
+          navList.classList.remove('mobile-open');
+          if (navOriginalParent && navList.parentElement !== navOriginalParent) {
+            if (navOriginalNextSibling) {
+              navOriginalParent.insertBefore(navList, navOriginalNextSibling);
+            } else {
+              navOriginalParent.appendChild(navList);
+            }
+          }
+        }
       }
+      placeNavForViewport();
+      window.addEventListener('resize', placeNavForViewport);
 
       function setHeaderHeightVar() {
         if (headerEl) {

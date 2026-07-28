@@ -32,10 +32,10 @@
       background: transparent;
       border: none;
       color: #fff;
-      font-size: 26px;
+      font-size: 40px;
       line-height: 1;
       cursor: pointer;
-      padding: 8px 12px;
+      padding: 10px 18px;
       z-index: 999;
     }
 
@@ -645,9 +645,16 @@
       var navList = document.getElementById('mainNavList');
       var headerEl = document.querySelector('.header-area');
 
+      // منو رو از داخل هدر می‌کشیم بیرون و مستقیم زیر body می‌ذاریم
+      // تا هیچ لایه یا افکت رنگی هدر (که پشت‌صحنه روش transform/overflow داره)
+      // نتونه روش یا زیرش قرار بگیره
+      if (navList && navList.parentElement !== document.body) {
+        document.body.appendChild(navList);
+      }
+
       function setHeaderHeightVar() {
         if (headerEl) {
-          var h = headerEl.offsetHeight;
+          var h = headerEl.getBoundingClientRect().height;
           document.documentElement.style.setProperty('--header-h', h + 'px');
         }
       }
